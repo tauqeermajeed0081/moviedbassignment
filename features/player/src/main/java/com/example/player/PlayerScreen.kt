@@ -16,24 +16,29 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.core.utils.AppConstants
 import com.example.model.response.SearchItem
+import com.example.player.utils.FullFeaturedVideoPlayer
 
 @Composable
 internal fun PlayerRoute(
     searchItem: SearchItem?,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: VideoViewModel = hiltViewModel()
 ) {
     PlayerScreen(
         searchItem = searchItem,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        viewModel = viewModel
     )
 }
 
 @Composable
 fun PlayerScreen(
     searchItem: SearchItem?,
+    viewModel: VideoViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -72,19 +77,29 @@ fun PlayerScreen(
     ) {
         // Background Image (full screen)
         if (!searchItem?.backdropPath.isNullOrBlank()) {
-            AsyncImage(
-                model = "${AppConstants.ImagePathOriginal}${searchItem?.backdropPath}",
-                contentDescription = searchItem?.title ?: searchItem?.name,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+            FullFeaturedVideoPlayer(
+                viewModel = viewModel,
+                videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                thumbnailUrl = "${AppConstants.ImagePathOriginal}${searchItem?.backdropPath}",
+                autoPlay = true,
+                showControls = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
             )
+
         } else if (!searchItem?.posterPath.isNullOrBlank()) {
-            AsyncImage(
-                model = "${AppConstants.ImagePathOriginal}${searchItem?.posterPath}",
-                contentDescription = searchItem?.title ?: searchItem?.name,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+            FullFeaturedVideoPlayer(
+                viewModel = viewModel,
+                videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                thumbnailUrl = "${AppConstants.ImagePathOriginal}${searchItem?.backdropPath}",
+                autoPlay = true,
+                showControls = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
             )
+
         } else {
             // Fallback background
             Box(
@@ -137,4 +152,4 @@ fun PlayerScreen(
             }
         }
     }
-} 
+}
